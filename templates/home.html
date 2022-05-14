@@ -1,6 +1,19 @@
 {% extends "layout.html" %}
 
-    
 {% block content %}
-<h1>Bienvenido a Merca Ya Online</h1>
+
+
+
+
+<h1><center>Bienvenido a Merca Ya Online</center></h1>
+
+<div class="slider">
+    <ul>
+        <li><img src="{{ url_for('static', filename='img/slide3.jpg') }}" alt=""></li>
+        <li><img src="{{ url_for('static', filename='img/slide1.jpg') }}" alt=""></li>
+        <li><img src="{{ url_for('static', filename='img/slide2.jpg') }}" alt=""></li>
+        <li><img src="{{ url_for('static', filename='img/slide4.jpg') }}" alt=""></li>
+    </ul>
+</div>
+
 {% endblock %}
