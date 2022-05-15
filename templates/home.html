@@ -5,7 +5,9 @@
 
 
 
-<h1><center>Bienvenido a Merca Ya Online</center></h1>
+<h1>
+    <center>Bienvenido a Merca Ya Online</center>
+</h1>
 
 <div class="slider">
     <ul>
@@ -15,5 +17,55 @@
         <li><img src="{{ url_for('static', filename='img/slide4.jpg') }}" alt=""></li>
     </ul>
 </div>
+
+<hr>
+
+<form action="{{ url_for('register') }}">
+    <div class="d-grid gap-2 col-6 mx-auto" align="center">
+        <h1>¿Nuevo aquí?</h1>
+        <button class="btn btn-primary" type="submit">Crea tu Cuenta</button>
+    </div>
+</form>
+<form action="{{ url_for('login') }}">
+    <div class="d-grid gap-2 col-6 mx-auto" align="center">
+        <h1>¿Ya eres cliente?</h1>
+        <button class="btn btn-primary" type="submit">Iniciar Sesión</button>
+    </div>
+</form>
+
+<hr>
+<h2 align="center">Quienes Somos</h2>
+<br>
+<div class="texto1">
+    <img src="{{ url_for('static', filename='img/desc1.jpg') }}" width="400" height="220">
+    <br> 
+    <p>Mercaya nació como una tienda de barrio en la ciudad de cartago que se dedica a la venta de
+        productos de limpieza, comida y algunos enceres, con el objetivo de que los clientes puedan
+        disfrutar de una experiencia familiar y de una compra segura. <br>
+        Hace varios años la tienda se convirtió en una de las más importantes en la ciudad de Cartago,
+        y pasamos a ser un supermercado y decidimos dar el paso a la web para competrir con los
+        demás supermercados de la ciudad ofreciendo una experiencia online y domicilio gratis. <br> <br><br> <br>
+    </p>
+</div>
+
+<hr>
+<h2 align="center">Acerca de la página</h2>
+<br>
+<div class="texto2">
+    <img src="{{ url_for('static', filename='img/desc2.png') }}" >
+    <br> <br> <br> 
+    <p>Este es el proyecto final de arquitectura de software, realizado por Juan Sebastián Vélez y 
+        entregado al profesor Carlos Alberto Ocampo. <br>
+        Se trata de un crud de una tienda online, con una interfaz de usuario sencilla y una base de datos
+        para almacenar los datos de los clientes y productos. <br>
+        El objetivo de este proyecto es que los usuarios puedan disfrutar de una experiencia de compra online
+        y que su domicilio llegue a su casa <br>
+        El proyecto se realizó con el lenguage de prohramación python para el crud, se utilizó la librería 
+        Flask para el desarrollo de la aplicación web y se utilizó la librería SQLAlchemy para la base de datos.
+        <br> <br> <br> 
+    </p>
+</div>
+
+<hr>
 
 {% endblock %}

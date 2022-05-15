@@ -37,5 +37,15 @@
     100% { margin-left: -300%; }
 }
 
+.texto1 img {
+    float:left;
+    margin-right: 5%;
+    clear:both;
+}
 
+.texto2 img {
+    float:right;
+    margin-left: 5%;
+    clear:both;
+}
 
