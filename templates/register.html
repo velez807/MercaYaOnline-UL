@@ -17,35 +17,35 @@
 </head>
 
 <body>
-    <form class="formulario" action="{{ url_for('mercaya') }}">
+    <form class="formulario" action="/Regis" method="POST">
         
         <h1>Registrate</h1>
         <div class="contenedor" >
 
             <div class="input-contenedor">
                 <i class="fas fa-user icon"></i>
-                <input type="text" class="nombre" 
-                    placeholder="Nombre Completo">
+                <input type="text" name="nombre" class="nombre" 
+                    placeholder="Nombre Completo" autofocus>
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-id-card icon"></i>
-                <input type="text" class="cedula"
+                <input type="text" name="cedula" class="cedula"
                     placeholder="Número de Cédula">
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-envelope icon"></i>
-                <input type="text" class="correo"
+                <input type="text" name="correo" class="correo"
                     placeholder="Correo Electronico">
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-key icon"></i>
-                <input type="password" class="contraseña"
+                <input type="password" name="contrasena" class="contraseña"
                     placeholder="Contraseña">
 
             </div>
@@ -60,28 +60,28 @@
         <div class="contenedor" >
             <div class="input-contenedor">
                 <i class="fas fa-credit-card icon"></i>
-                <input type="text" class="tarjeta"
+                <input type="text" name="tarjeta" class="tarjeta"
                     placeholder="Tarjeta de credito">
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-key icon"></i>
-                <input type="password" class="codigo"
+                <input type="password" name="codigo" class="codigo"
                     placeholder="Código">
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-calendar-alt icon"></i>
-                <input type="text" class="fecha" 
+                <input type="text" name="fecha" class="fecha" 
                 placeholder="Vencimiento - Mes / Año">
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-map-marked-alt icon"></i>
-                <input type="text" class="direccion"
+                <input type="text" name="direccion" class="direccion"
                     placeholder="Dirección">
 
             </div>
