@@ -12,49 +12,85 @@
         content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=3.0, minimum-scale=1.0">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilosLoginRegister.css') }}">
-
+    <script src="{{ url_for('static', filename='js/valreg.js') }}"></script>
 
 </head>
 
 <body>
-    <form class="formulario" action="{{ url_for('terminarRegistro') }}">
-
+    <form class="formulario" action="{{ url_for('mercaya') }}">
+        
         <h1>Registrate</h1>
-        <div class="contenedor">
+        <div class="contenedor" >
 
             <div class="input-contenedor">
                 <i class="fas fa-user icon"></i>
-                <input type="text" placeholder="Nombre Completo">
+                <input type="text" class="nombre" 
+                    placeholder="Nombre Completo">
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-id-card icon"></i>
-                <input type="text" placeholder="Número de Cédula">
+                <input type="text" class="cedula"
+                    placeholder="Número de Cédula">
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-envelope icon"></i>
-                <input type="text" placeholder="Correo Electronico">
+                <input type="text" class="correo"
+                    placeholder="Correo Electronico">
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-key icon"></i>
-                <input type="password" placeholder="Contraseña">
+                <input type="password" class="contraseña"
+                    placeholder="Contraseña">
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-key icon"></i>
-                <input type="password" placeholder="Repetir Contraseña">
-
+                <input type="password" class="rcontraseña"
+                    placeholder="Repetir Contraseña">
             </div>
-            <input type="submit" value="Registrate" class="button">
-            <p>Al registrarte, aceptas nuestras Condiciones de uso y Política de privacidad.</p>
-            <p>¿Ya tienes una cuenta?<a class="link" href="{{ url_for('login') }}"> Iniciar Sesion</a></p>
         </div>
+            
+        <div class="contenedor" >
+            <div class="input-contenedor">
+                <i class="fas fa-credit-card icon"></i>
+                <input type="text" class="tarjeta"
+                    placeholder="Tarjeta de credito">
+
+            </div>
+
+            <div class="input-contenedor">
+                <i class="fas fa-key icon"></i>
+                <input type="password" class="codigo"
+                    placeholder="Código">
+
+            </div>
+
+            <div class="input-contenedor">
+                <i class="fas fa-calendar-alt icon"></i>
+                <input type="text" class="fecha" 
+                placeholder="Vencimiento - Mes / Año">
+
+            </div>
+
+            <div class="input-contenedor">
+                <i class="fas fa-map-marked-alt icon"></i>
+                <input type="text" class="direccion"
+                    placeholder="Dirección">
+
+            </div>
+        </div>
+        
+        <input type="button" value="Registrate" class="button btnAction">
+        <p>Al registrarte, aceptas nuestras Condiciones de uso y Política de privacidad.</p>
+        <p>¿Ya tienes una cuenta?<a class="link" href="{{ url_for('login') }}"> Iniciar Sesion</a></p>
+
     </form>
 </body>
 

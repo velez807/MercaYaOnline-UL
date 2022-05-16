@@ -19,9 +19,6 @@ def login():
 def register():
     return render_template('register.html')
 
-@app.route('/terminarRegistro.html')
-def terminarRegistro():
-    return render_template('terminarRegistro.html')
 
 @app.route('/mercaya.html')
 def mercaya():
