@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 #Servidor:
@@ -38,6 +38,22 @@ def crearUsuario():
     db.session.add(nuevoUsuario)
     db.session.commit()
     return render_template('Regis.html')
+
+@app.route('/mercaya', methods=['POST', 'GET'])
+def log():
+    if request.method == 'POST':
+        cedula = request.form['cedula']
+        contrasena = request.form['contrasena']
+        usuario = Usuario.query.filter_by(cedula=cedula, contrasena=contrasena).first()
+        if usuario:
+            if usuario.cedula == 'admin':
+                return render_template('admin.html')
+            else:    
+                return render_template('mercaya.html', nombre=usuario.nombre)
+        else:
+            return 'Usuario no encontrado'
+    else:
+        return render_template('log.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
