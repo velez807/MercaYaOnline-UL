@@ -40,7 +40,7 @@ def crearUsuario():
     if Usuario.query.filter_by(cedula=request.form['cedula']).first() is None:
         db.session.add(nuevoUsuario)
         db.session.commit()
-        return redirect(url_for('Regis.html'))
+        return render_template('Regis.html')
     else:
         error = 'Ya hay un usuario registrado con esta cédula'
         return render_template('register.html', error=error)
