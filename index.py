@@ -19,6 +19,7 @@ class Usuario(db.Model):
     fecha = db.Column(db.String(80))
     direccion = db.Column(db.String(200))
 
+#Rutas:
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -35,9 +36,14 @@ def register():
 @app.route('/Regis', methods=['POST'])
 def crearUsuario():
     nuevoUsuario = Usuario(nombre=request.form['nombre'], cedula=request.form['cedula'], correo=request.form['correo'], contrasena=request.form['contrasena'], tarjeta=request.form['tarjeta'], codigo=request.form['codigo'], fecha=request.form['fecha'], direccion=request.form['direccion'])
-    db.session.add(nuevoUsuario)
-    db.session.commit()
-    return render_template('Regis.html')
+    #confirmar que la cedula no exista en la base de datos
+    if Usuario.query.filter_by(cedula=request.form['cedula']).first() is None:
+        db.session.add(nuevoUsuario)
+        db.session.commit()
+        return redirect(url_for('Regis.html'))
+    else:
+        error = 'Ya hay un usuario registrado con esta cédula'
+        return render_template('register.html', error=error)
 
 @app.route('/mercaya', methods=['POST', 'GET'])
 def log():
@@ -51,9 +57,12 @@ def log():
             else:    
                 return render_template('mercaya.html', nombre=usuario.nombre)
         else:
-            return 'Usuario no encontrado'
+            error = 'Usuario o contraseña incorrectos'
+            return render_template('login.html', error=error)
     else:
         return render_template('log.html')
 
+
+# Vea ni por el htpa vaya a borrar esto gvon
 if __name__ == '__main__':
     app.run(debug=True)

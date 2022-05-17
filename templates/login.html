@@ -22,7 +22,11 @@
 
         <h1>Iniciar Sesión</h1>
         <div class="contenedor">
-
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+              </div>
+            {% endif %}
             <div class="input-contenedor"> 
                 <i class="fas fa-id-card icon"></i>
                 <input type="text" class="cedula" name="cedula" placeholder="Número de Cédula" autofocus>   

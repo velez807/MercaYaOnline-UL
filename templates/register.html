@@ -28,12 +28,16 @@
                     placeholder="Nombre Completo" autofocus>
 
             </div>
-
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+              </div>
+            {% endif %}
             <div class="input-contenedor">
                 <i class="fas fa-id-card icon"></i>
                 <input type="text" name="cedula" class="cedula"
                     placeholder="Número de Cédula">
-
+                
             </div>
 
             <div class="input-contenedor">
