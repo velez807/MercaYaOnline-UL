@@ -63,6 +63,7 @@ def log():
         return render_template('log.html')
 
 
+
 # Vea ni por el htpa vaya a borrar esto gvon
 if __name__ == '__main__':
     app.run(debug=True)
