@@ -86,7 +86,7 @@ def crearProducto():
     if Producto.query.filter_by(nombre=request.form['nombre']).first() is None:
         db.session.add(nuevoProducto)
         db.session.commit()
-        return render_template('verproducto.html', nombre=nuevoProducto.nombre, imagen=nuevoProducto.imagen, precio=nuevoProducto.precio, categoria=nuevoProducto.categoria, cantidad=nuevoProducto.cantidad, descripcion=nuevoProducto.descripcion)
+        return render_template('admin.html', productos=Producto.query.all())
     else:
         error = 'Ya se registro este producto'
         return render_template('crearproducto.html', error=error)
@@ -96,7 +96,7 @@ def deleteProducto(id):
     producto = Producto.query.filter_by(id=id).first()
     db.session.delete(producto)
     db.session.commit()
-    return redirect(url_for('log'))
+    return render_template('admin.html', productos=Producto.query.all(), nombreU='admin')
 
 @app.route('/EditarProducto/<id>', methods=['POST', 'GET'])
 def editProducto(id):
@@ -109,24 +109,9 @@ def editProducto(id):
         producto.cantidad = request.form['cantidad']
         producto.descripcion = request.form['descripcion']
         db.session.commit()
-        return redirect(url_for('log'))
+        return render_template('admin.html', productos=Producto.query.all(), nombreU='admin')
     else:
         return render_template('editproducto.html', producto=producto)
-
-@app.route('/update', methods=['POST', 'GET'])
-def Update():
-    producto = Producto.query.filter_by(id=id).first()
-    if request.method == 'POST':
-        producto.nombre = request.form['nombre']
-        producto.imagen = request.form['imagen']
-        producto.precio = request.form['precio']
-        producto.categoria = request.form['categoria']
-        producto.cantidad = request.form['cantidad']
-        producto.descripcion = request.form['descripcion']
-        db.session.commit()
-        return redirect(url_for('log'))
-    else:
-        return render_template('editarproducto.html', producto=producto)
 
 
 
