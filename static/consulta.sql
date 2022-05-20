@@ -22,3 +22,24 @@ CREATE TABLE usuario (
     fecha VARCHAR(80) NOT NULL,
     direccion VARCHAR(200) NOT NULL
 );
+
+class Producto(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(80))
+    imagen = db.Column(db.String(300))
+    precio = db.Column(db.String(80))
+    categoria = db.Column(db.String(80))
+    cantidad = db.Column(db.String(80))
+    descripcion = db.Column(db.String(200))
+
+-- crear tabla con los datos de arriba
+
+CREATE TABLE producto (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre VARCHAR(80) NOT NULL,
+    imagen VARCHAR(300) NOT NULL,
+    precio VARCHAR(80) NOT NULL,
+    categoria VARCHAR(80) NOT NULL,
+    cantidad INTEGER(80) NOT NULL,
+    descripcion VARCHAR(200) NOT NULL
+);

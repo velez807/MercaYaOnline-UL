@@ -12,7 +12,6 @@
         content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=3.0, minimum-scale=1.0">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilosLoginRegister.css') }}">
-    <script src="{{ url_for('static', filename='js/vallog.js') }}"></script>
 
 
 </head>
@@ -20,6 +19,11 @@
 <body>
     <form class="formulario" action="/mercaya" method="POST">
 
+        {% if aviso %}
+        <div class="alert alert-danger">
+            {{ aviso }}
+        </div>
+        {% endif %}
         <h1>Iniciar Sesión</h1>
         <div class="contenedor">
             {% if error %}
@@ -29,15 +33,15 @@
             {% endif %}
             <div class="input-contenedor"> 
                 <i class="fas fa-id-card icon"></i>
-                <input type="text" class="cedula" name="cedula" placeholder="Número de Cédula" autofocus>   
+                <input type="text" class="cedula" name="cedula" placeholder="Número de Cédula" autofocus required>   
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-key icon"></i>
-                <input type="password" class="contraseña" name="contrasena" placeholder="Contraseña">
+                <input type="password" class="contraseña" name="contrasena" placeholder="Contraseña" required>
 
             </div>
-            <input type="button" value="Iniciar Sesión" class="button btnAction">
+            <input type="submit" value="Iniciar Sesión" class="button btnAction">
             <p>Al registrarte, aceptas nuestras Condiciones de uso y Política de privacidad.</p>
             <p>¿No tienes una cuenta? <a class="link" href="{{ url_for('register') }}">Registrate </a></p>
         </div>

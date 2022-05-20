@@ -12,8 +12,6 @@
         content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=3.0, minimum-scale=1.0">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilosLoginRegister.css') }}">
-    <script src="{{ url_for('static', filename='js/valreg.js') }}"></script>
-
 </head>
 
 <body>
@@ -21,11 +19,15 @@
         
         <h1>Registrate</h1>
         <div class="contenedor" >
-
+            {% if admin %}
+            <div class="alert alert-danger" role="alert">
+                {{ admin }}
+              </div>
+            {% endif %}
             <div class="input-contenedor">
                 <i class="fas fa-user icon"></i>
                 <input type="text" name="nombre" class="nombre" 
-                    placeholder="Nombre Completo" autofocus>
+                    placeholder="Nombre Completo" autofocus required>
 
             </div>
             {% if error %}
@@ -36,28 +38,28 @@
             <div class="input-contenedor">
                 <i class="fas fa-id-card icon"></i>
                 <input type="text" name="cedula" class="cedula"
-                    placeholder="Número de Cédula">
+                    placeholder="Número de Cédula" required>
                 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-envelope icon"></i>
                 <input type="text" name="correo" class="correo"
-                    placeholder="Correo Electronico">
+                    placeholder="Correo Electronico" required>
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-key icon"></i>
                 <input type="password" name="contrasena" class="contraseña"
-                    placeholder="Contraseña">
+                    placeholder="Contraseña" required>
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-key icon"></i>
                 <input type="password" class="rcontraseña"
-                    placeholder="Repetir Contraseña">
+                    placeholder="Repetir Contraseña" required>
             </div>
         </div>
             
@@ -65,33 +67,33 @@
             <div class="input-contenedor">
                 <i class="fas fa-credit-card icon"></i>
                 <input type="text" name="tarjeta" class="tarjeta"
-                    placeholder="Tarjeta de credito">
+                    placeholder="Tarjeta de credito" required>
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-key icon"></i>
                 <input type="password" name="codigo" class="codigo"
-                    placeholder="Código">
+                    placeholder="Código" required>
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-calendar-alt icon"></i>
                 <input type="text" name="fecha" class="fecha" 
-                placeholder="Vencimiento - Mes / Año">
+                placeholder="Vencimiento - Mes / Año" required>
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-map-marked-alt icon"></i>
                 <input type="text" name="direccion" class="direccion"
-                    placeholder="Dirección">
+                    placeholder="Dirección" required>
 
             </div>
         </div>
         
-        <input type="button" value="Registrate" class="button btnAction">
+        <input type="submit" value="Registrate" class="button btnAction">
         <p>Al registrarte, aceptas nuestras Condiciones de uso y Política de privacidad.</p>
         <p>¿Ya tienes una cuenta?<a class="link" href="{{ url_for('login') }}"> Iniciar Sesion</a></p>
 
