@@ -8,6 +8,8 @@ class Usuario(db.Model):
     codigo = db.Column(db.String(80))
     fecha = db.Column(db.String(80))
     direccion = db.Column(db.String(200))
+    telefono = db.Column(db.String(80))
+    compras = db.column(db.Integer)
 
 -- crear tabla con los datos de arriba
 
@@ -20,7 +22,8 @@ CREATE TABLE usuario (
     tarjeta VARCHAR(80) NOT NULL,
     codigo VARCHAR(80) NOT NULL,
     fecha VARCHAR(80) NOT NULL,
-    direccion VARCHAR(200) NOT NULL
+    direccion VARCHAR(200) NOT NULL,
+    telefono VARCHAR(20) NOT NULL
 );
 
 class Producto(db.Model):
@@ -29,7 +32,7 @@ class Producto(db.Model):
     imagen = db.Column(db.String(300))
     precio = db.Column(db.String(80))
     categoria = db.Column(db.String(80))
-    cantidad = db.Column(db.String(80))
+    cantidad = db.column(db.Integer)
     descripcion = db.Column(db.String(200))
 
 -- crear tabla con los datos de arriba
@@ -40,6 +43,6 @@ CREATE TABLE producto (
     imagen VARCHAR(300) NOT NULL,
     precio VARCHAR(80) NOT NULL,
     categoria VARCHAR(80) NOT NULL,
-    cantidad INTEGER(80) NOT NULL,
+    cantidad VARCHAR(80) NOT NULL,
     descripcion VARCHAR(200) NOT NULL
 );

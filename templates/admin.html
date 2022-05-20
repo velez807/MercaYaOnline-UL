@@ -26,7 +26,7 @@
                         <a class="nav-link" href="">Productos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">Perfil</a>
+                        <a class="nav-link" href="{{ url_for('perfil', id=usuario.id) }}">Perfil</a>
                     </li>
                     <form class="form-inline my-2 my-lg-0">
                         <li>
@@ -72,11 +72,11 @@
                             <li class="list-group-item">Valor: {{producto.precio}}</li>
                             <li class="list-group-item">Cantidad Disponible: {{producto.cantidad}}</li>
                         </ul>
-                        {% if nombreU == 'admin' %}
+                        {% if usuario.nombre == 'admin' %}
                         <a href="{{ url_for('editProducto', id=producto.id) }}" class="btn btn-primary">Editar</a>
                         <a href="{{ url_for('deleteProducto', id=producto.id) }}" class="btn btn-danger">Eliminar</a>
                         {% else %}
-                        <a onclick="Swal.fire('Gracias por comprar, el producto ya va a tu direccion:', '{{direccion}}')" class="btn btn-primary">Comprar</a>
+                        <a onclick="Swal.fire('Gracias por comprar, el producto ya va a tu direccion:', '{{usuario.direccion}}')" class="btn btn-primary">Comprar</a>
                         {% endif %}
                     </div>
                 </div>

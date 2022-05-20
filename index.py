@@ -18,6 +18,8 @@ class Usuario(db.Model):
     codigo = db.Column(db.String(80))
     fecha = db.Column(db.String(80))
     direccion = db.Column(db.String(200))
+    telefono = db.Column(db.String(80))
+
 
 class Producto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,7 +29,6 @@ class Producto(db.Model):
     categoria = db.Column(db.String(80))
     cantidad = db.Column(db.String(80))
     descripcion = db.Column(db.String(200))
-    
 
 #Rutas:
 @app.route('/')
@@ -45,7 +46,7 @@ def register():
 
 @app.route('/Regis', methods=['POST'])
 def crearUsuario():
-    nuevoUsuario = Usuario(nombre=request.form['nombre'], cedula=request.form['cedula'], correo=request.form['correo'], contrasena=request.form['contrasena'], tarjeta=request.form['tarjeta'], codigo=request.form['codigo'], fecha=request.form['fecha'], direccion=request.form['direccion'])
+    nuevoUsuario = Usuario(nombre=request.form['nombre'], cedula=request.form['cedula'], correo=request.form['correo'], contrasena=request.form['contrasena'], tarjeta=request.form['tarjeta'], codigo=request.form['codigo'], fecha=request.form['fecha'], direccion=request.form['direccion'], telefono=request.form['telefono'])
     if nuevoUsuario.nombre == 'admin':
         return render_template('register.html', admin='Nombre de usuario incorrecto')
     if Usuario.query.filter_by(cedula=request.form['cedula']).first() is None:
@@ -65,9 +66,9 @@ def log():
         productos = Producto.query.all()
         if usuario:
             if usuario.cedula == 'admin':
-                return render_template('admin.html', productos=productos, nombreU=usuario.nombre)
+                return render_template('admin.html', productos=productos, usuario=usuario)
             else:    
-                return render_template('mercaya.html', nombreU=usuario.nombre, direccion=usuario.direccion, productos=productos)
+                return render_template('mercaya.html', usuario=usuario, productos=productos)
         else:
             error = 'Usuario o contraseña incorrectos'
             return render_template('login.html', error=error)
@@ -86,7 +87,7 @@ def crearProducto():
     if Producto.query.filter_by(nombre=request.form['nombre']).first() is None:
         db.session.add(nuevoProducto)
         db.session.commit()
-        return render_template('admin.html', productos=Producto.query.all())
+        return render_template('admin.html', productos=Producto.query.all(), usuario=Usuario.query.filter_by(cedula='admin').first())
     else:
         error = 'Ya se registro este producto'
         return render_template('crearproducto.html', error=error)
@@ -96,7 +97,7 @@ def deleteProducto(id):
     producto = Producto.query.filter_by(id=id).first()
     db.session.delete(producto)
     db.session.commit()
-    return render_template('admin.html', productos=Producto.query.all(), nombreU='admin')
+    return render_template('admin.html', productos=Producto.query.all(), usuario=Usuario.query.filter_by(cedula='admin').first())
 
 @app.route('/EditarProducto/<id>', methods=['POST', 'GET'])
 def editProducto(id):
@@ -109,12 +110,18 @@ def editProducto(id):
         producto.cantidad = request.form['cantidad']
         producto.descripcion = request.form['descripcion']
         db.session.commit()
-        return render_template('admin.html', productos=Producto.query.all(), nombreU='admin')
+        return render_template('admin.html', productos=Producto.query.all(), usuario=Usuario.query.filter_by(cedula='admin').first())
     else:
         return render_template('editproducto.html', producto=producto)
 
 
-
+@app.route('/perfil/<id>', methods=['POST', 'GET'])
+def perfil(id):
+    usuario = Usuario.query.filter_by(id=id).first()
+    if request.method == 'POST':
+        return render_template('perfil.html', usuario=usuario)
+    else:
+        return render_template('perfil.html', usuario=usuario)
 
 
 
