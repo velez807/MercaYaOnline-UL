@@ -21,43 +21,43 @@
         <div class="contenedor" >
             <div class="input-contenedor">
                 <input type="text" name="nombre" class="nombre" 
-                    placeholder="Nombre del producto" autofocus required>
+                    placeholder="Nombre del producto" value="{{producto.nombre}}" autofocus required>
 
             </div>
             
             <div class="input-contenedor">
                 <input type="text" name="imagen" class="imagen"
-                    placeholder="URL de la imagen" required>
+                    placeholder="URL de la imagen" value="{{producto.imagen}}" required>
                 
             </div>
 
             <div class="input-contenedor">
                 <input type="text" name="precio" class="precio"
-                    placeholder="Precio por unidad o peso" required>
+                    placeholder="Precio por unidad o peso" value="{{producto.precio}}" required>
 
             </div>
 
             <div class="input-contenedor">
                 <input type="text" name="categoria" class="categoria"
-                    placeholder="Categoria" required>
+                    placeholder="Categoria" value="{{producto.categoria}}" required>
 
             </div>
 
             <div class="input-contenedor">
-                <input type="text" name="cantidad" class="cantidad"
-                    placeholder="Catidad en inventario" required>
+                <input type="number" name="cantidad" class="cantidad"
+                    placeholder="Catidad en inventario" value="{{producto.cantidad}}" required>
             </div>
         </div>
             
         <div class="contenedor" >
             <div class="input-contenedor">
                 <input type="text" name="descripcion" class="descripcion" required
-                    placeholder="Breve descripcion del producto">
+                    placeholder="Breve descripcion del producto" value="{{producto.descripcion}}">
 
             </div>
         </div>
         
-        <input type="submit" value="Editar producto" class="button btnAction">
+        <input type="submit" value="Editar producto" class="button">
         <p>Asegurese de llenar todos los campos correctamente.</p>
 
     </form>

@@ -16,8 +16,16 @@ h1{
     color: #1a2537;
     font-size: 40px;
 }
+label{
+    font-size: 20px;
+    color: #1a2537;
+}
+
 input[type="text"],
-input[type="password"]{
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="month"]{
     font-size: 20px;
     width: 82%;
     padding: 10px;

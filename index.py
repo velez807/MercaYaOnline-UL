@@ -1,5 +1,7 @@
+from itertools import product
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+import time
 
 #Servidor:
 app = Flask(__name__)
@@ -63,12 +65,8 @@ def log():
         cedula = request.form['cedula']
         contrasena = request.form['contrasena']
         usuario = Usuario.query.filter_by(cedula=cedula, contrasena=contrasena).first()
-        productos = Producto.query.all()
         if usuario:
-            if usuario.cedula == 'admin':
-                return render_template('admin.html', productos=productos, usuario=usuario)
-            else:    
-                return render_template('mercaya.html', usuario=usuario, productos=productos)
+            return redirect(url_for('productos', idu=usuario.id))
         else:
             error = 'Usuario o contraseña incorrectos'
             return render_template('login.html', error=error)
@@ -77,27 +75,42 @@ def log():
         return render_template('login.html', aviso=aviso)
 
 
+@app.route('/mercaya/productos/<idu>')
+def productos(idu):
+    productos = Producto.query.all()
+    usuario = Usuario.query.filter_by(id=idu).first()
+    for producto in productos:
+        if producto.cantidad < 0:
+            producto.cantidad = producto.cantidad * -1
+            db.session.commit()
+
+    if usuario.cedula == 'admin':
+        return render_template('admin.html', productos=productos, usuario=usuario)
+    else:    
+        return render_template('mercaya.html', usuario=usuario, productos=productos)
+
+
 @app.route('/admin/AgregarProducto')
 def aggproductos():
     return render_template('crearproducto.html')
 
-@app.route('/Producto', methods=['POST', 'GET'])
+@app.route('/Crear', methods=['POST', 'GET'])
 def crearProducto():
     nuevoProducto = Producto(nombre=request.form['nombre'], imagen=request.form['imagen'], precio=request.form['precio'], categoria=request.form['categoria'], cantidad=request.form['cantidad'], descripcion=request.form['descripcion'])
     if Producto.query.filter_by(nombre=request.form['nombre']).first() is None:
         db.session.add(nuevoProducto)
         db.session.commit()
-        return render_template('admin.html', productos=Producto.query.all(), usuario=Usuario.query.filter_by(cedula='admin').first())
+        return redirect(url_for('productos', idu=1))
     else:
         error = 'Ya se registro este producto'
         return render_template('crearproducto.html', error=error)
 
-@app.route('/Mercaya/<id>', methods=['POST', 'GET'])
+@app.route('/Eliminar/<id>', methods=['POST', 'GET'])
 def deleteProducto(id):
     producto = Producto.query.filter_by(id=id).first()
     db.session.delete(producto)
     db.session.commit()
-    return render_template('admin.html', productos=Producto.query.all(), usuario=Usuario.query.filter_by(cedula='admin').first())
+    return redirect(url_for('productos', idu=1))
 
 @app.route('/EditarProducto/<id>', methods=['POST', 'GET'])
 def editProducto(id):
@@ -110,18 +123,35 @@ def editProducto(id):
         producto.cantidad = request.form['cantidad']
         producto.descripcion = request.form['descripcion']
         db.session.commit()
-        return render_template('admin.html', productos=Producto.query.all(), usuario=Usuario.query.filter_by(cedula='admin').first())
+        return redirect(url_for('productos', idu=1))
     else:
         return render_template('editproducto.html', producto=producto)
 
 
-@app.route('/perfil/<id>', methods=['POST', 'GET'])
-def perfil(id):
-    usuario = Usuario.query.filter_by(id=id).first()
+@app.route('/perfil/<idu>', methods=['POST', 'GET'])
+def perfil(idu):
+    usuario = Usuario.query.filter_by(id=idu).first()
     if request.method == 'POST':
         return render_template('perfil.html', usuario=usuario)
     else:
         return render_template('perfil.html', usuario=usuario)
+
+@app.route('/Mercaya/<id><idu>')
+def reducirCantidad(id, idu):
+    producto = Producto.query.filter_by(id=id).first()
+    usuario = Usuario.query.filter_by(id=idu).first()
+    if producto.cantidad >= 1:
+        producto.cantidad = producto.cantidad - 1
+        db.session.commit()
+        time.sleep(3)
+        return redirect(url_for('productos', idu=usuario.id))
+    else:
+        pass
+
+@app.route('/Admin/Usuarios')
+def verUsuarios():
+    usuarios = Usuario.query.all()
+    return render_template('usuarios.html', usuarios=usuarios)
 
 
 

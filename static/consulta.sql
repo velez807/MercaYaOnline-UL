@@ -39,10 +39,10 @@ class Producto(db.Model):
 
 CREATE TABLE producto (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nombre VARCHAR(80) NOT NULL,
-    imagen VARCHAR(300) NOT NULL,
-    precio VARCHAR(80) NOT NULL,
-    categoria VARCHAR(80) NOT NULL,
-    cantidad VARCHAR(80) NOT NULL,
-    descripcion VARCHAR(200) NOT NULL
+    nombre TEXT NOT NULL,
+    imagen TEXT NOT NULL,
+    precio TEXT NOT NULL,
+    categoria TEXT NOT NULL,
+    cantidad INTEGER NOT NULL,
+    descripcion TEXT NOT NULL
 );

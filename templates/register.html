@@ -37,21 +37,21 @@
             {% endif %}
             <div class="input-contenedor">
                 <i class="fas fa-id-card icon"></i>
-                <input type="text" name="cedula" class="cedula"
+                <input type="number" name="cedula" class="cedula"
                     placeholder="Número de Cédula" required>
                 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-envelope icon"></i>
-                <input type="text" name="correo" class="correo"
+                <input type="email" name="correo" class="correo"
                     placeholder="Correo Electronico" required>
 
             </div>
 
             <div class="input-contenedor">
                 <i class="fas fa-mobile icon"></i>
-                <input type="text" name="telefono" class="telefono"
+                <input type="number" name="telefono" class="telefono"
                     placeholder="Número telefonico" required>
 
             </div>
@@ -73,7 +73,7 @@
         <div class="contenedor" >
             <div class="input-contenedor">
                 <i class="fas fa-credit-card icon"></i>
-                <input type="text" name="tarjeta" class="tarjeta"
+                <input type="number" name="tarjeta" class="tarjeta"
                     placeholder="Tarjeta de credito" required>
 
             </div>
@@ -85,9 +85,10 @@
 
             </div>
 
+            <label>Vencimiento</label>
             <div class="input-contenedor">
                 <i class="fas fa-calendar-alt icon"></i>
-                <input type="text" name="fecha" class="fecha" 
+                <input type="month" name="fecha" class="fecha" 
                 placeholder="Vencimiento - Mes / Año" required>
 
             </div>
