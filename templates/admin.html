@@ -27,6 +27,9 @@
                         <a class="nav-link" href="">Productos</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('carrito', idu=usuario.id) }}">Carrito</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('perfil', idu=usuario.id) }}">Perfil</a>
                     </li>
 
@@ -81,6 +84,11 @@
             <!-- Productos: -->
 
             {% for producto in productos %}
+            {% if errorC %}
+            <div class="alert alert-danger" role="alert">
+                {{ errorC }}
+            </div>
+            {% endif %}
             <div class="col-sm-4" style="list-style: none;">
                 <div class="card">
                     <img class="card-img-top imagen" src="{{producto.imagen}}">
@@ -89,17 +97,21 @@
                         <p class="card-text">{{producto.descripcion}}</p>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">Categoria: {{producto.categoria}}</li>
-                            <li class="list-group-item">Valor: {{producto.precio}}</li>
+                            <li class="list-group-item">Valor: ${{producto.precio}}</li>
                             <li class="list-group-item">Cantidad Disponible: {{producto.cantidad}}</li>
                             <li class="list-group-item"></li>
                         </ul>
                         {% if usuario.nombre != 'admin' %}
                         {% if producto.cantidad > 0 %}
-                        <a href="{{ url_for('reducirCantidad', id=producto.id, idu=usuario.id) }}"
-                            onclick="Swal.fire('Gracias por comprar, el producto ya va a tu direccion:', '{{usuario.direccion}}')"
-                            class="btn btn-dark">Comprar
-                        </a>
+                        <form method="post" action="/agregarCarrito/{{ usuario.id }}">
+                            <input type="hidden" name="code" value="{{ producto.id }}">
+                            <input type="number" min="1" max="{{producto.cantidad}}" name="cantidadC" value="1"
+                                style="width: 50px;">
+                            <input type="submit" onclick="Swal.fire('El producto se ha agregado al carrito')"
+                            class="btn btn-dark" value="Agregar al carrito">
+                        </form>
                         {% else %}
+
                         <button type="button" class="btn btn-secondary" disabled>Comprar</button>
                         {% endif %}
 

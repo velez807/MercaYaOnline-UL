@@ -9,7 +9,7 @@ class Usuario(db.Model):
     fecha = db.Column(db.String(80))
     direccion = db.Column(db.String(200))
     telefono = db.Column(db.String(80))
-    compras = db.column(db.Integer)
+    carrito = db.column(db.String(1000))
 
 -- crear tabla con los datos de arriba
 
@@ -24,7 +24,11 @@ CREATE TABLE usuario (
     fecha VARCHAR(80) NOT NULL,
     direccion VARCHAR(200) NOT NULL,
     telefono VARCHAR(20) NOT NULL
-);
+    );
+
+-- insertar usuario admin
+INSERT INTO usuario (nombre, cedula, correo, contrasena, tarjeta, codigo, fecha, direccion, telefono) 
+VALUES              ('admin', 'admin', 'admin', 'admin', 'admin', 'admin', 'admin', 'admin', 'admin');
 
 class Producto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -41,8 +45,11 @@ CREATE TABLE producto (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre TEXT NOT NULL,
     imagen TEXT NOT NULL,
-    precio TEXT NOT NULL,
+    precio REAL NOT NULL,
     categoria TEXT NOT NULL,
     cantidad INTEGER NOT NULL,
     descripcion TEXT NOT NULL
 );
+
+
+

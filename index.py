@@ -1,14 +1,16 @@
-from itertools import product
-from flask import Flask, render_template, request, redirect, url_for
+from array import array
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 import time
 
-#Servidor:
+# Servidor:
 app = Flask(__name__)
+app.secret_key = "arquitectura"
 
-#Base de datos:
+# Base de datos:
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
+
 
 class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -21,6 +23,7 @@ class Usuario(db.Model):
     fecha = db.Column(db.String(80))
     direccion = db.Column(db.String(200))
     telefono = db.Column(db.String(80))
+    carrito = db.column(db.String(1000))
 
 
 class Producto(db.Model):
@@ -32,14 +35,27 @@ class Producto(db.Model):
     cantidad = db.Column(db.String(80))
     descripcion = db.Column(db.String(200))
 
-#Rutas:
+
+def array_merge(first_array, second_array):
+    if isinstance(first_array, list) and isinstance(second_array, list):
+        return first_array + second_array
+    elif isinstance(first_array, dict) and isinstance(second_array, dict):
+        return dict(list(first_array.items()) + list(second_array.items()))
+    elif isinstance(first_array, set) and isinstance(second_array, set):
+        return first_array.union(second_array)
+    return False
+
+
+# Rutas:
 @app.route('/')
 def home():
     return render_template('home.html')
 
+
 @app.route('/login')
 def login():
     return render_template('login.html')
+
 
 @app.route('/register')
 def register():
@@ -48,7 +64,8 @@ def register():
 
 @app.route('/Regis', methods=['POST'])
 def crearUsuario():
-    nuevoUsuario = Usuario(nombre=request.form['nombre'], cedula=request.form['cedula'], correo=request.form['correo'], contrasena=request.form['contrasena'], tarjeta=request.form['tarjeta'], codigo=request.form['codigo'], fecha=request.form['fecha'], direccion=request.form['direccion'], telefono=request.form['telefono'])
+    nuevoUsuario = Usuario(nombre=request.form['nombre'], cedula=request.form['cedula'], correo=request.form['correo'], contrasena=request.form['contrasena'],
+                           tarjeta=request.form['tarjeta'], codigo=request.form['codigo'], fecha=request.form['fecha'], direccion=request.form['direccion'], telefono=request.form['telefono'])
     if nuevoUsuario.nombre == 'admin':
         return render_template('register.html', admin='Nombre de usuario incorrecto')
     if Usuario.query.filter_by(cedula=request.form['cedula']).first() is None:
@@ -57,14 +74,15 @@ def crearUsuario():
         return render_template('Regis.html')
     else:
         return render_template('register.html', error='Ya hay un usuario registrado con esta cédula')
-    
+
 
 @app.route('/mercaya', methods=['POST', 'GET'])
 def log():
     if request.method == 'POST':
         cedula = request.form['cedula']
         contrasena = request.form['contrasena']
-        usuario = Usuario.query.filter_by(cedula=cedula, contrasena=contrasena).first()
+        usuario = Usuario.query.filter_by(
+            cedula=cedula, contrasena=contrasena).first()
         if usuario:
             return redirect(url_for('productos', idu=usuario.id))
         else:
@@ -86,17 +104,25 @@ def productos(idu):
 
     if usuario.cedula == 'admin':
         return render_template('admin.html', productos=productos, usuario=usuario)
-    else:    
+    else:
         return render_template('mercaya.html', usuario=usuario, productos=productos)
+
+
+@app.route('/Admin/Usuarios')
+def verUsuarios():
+    usuarios = Usuario.query.all()
+    return render_template('usuarios.html', usuarios=usuarios)
 
 
 @app.route('/admin/AgregarProducto')
 def aggproductos():
     return render_template('crearproducto.html')
 
+
 @app.route('/Crear', methods=['POST', 'GET'])
 def crearProducto():
-    nuevoProducto = Producto(nombre=request.form['nombre'], imagen=request.form['imagen'], precio=request.form['precio'], categoria=request.form['categoria'], cantidad=request.form['cantidad'], descripcion=request.form['descripcion'])
+    nuevoProducto = Producto(nombre=request.form['nombre'], imagen=request.form['imagen'], precio=request.form['precio'],
+                             categoria=request.form['categoria'], cantidad=request.form['cantidad'], descripcion=request.form['descripcion'])
     if Producto.query.filter_by(nombre=request.form['nombre']).first() is None:
         db.session.add(nuevoProducto)
         db.session.commit()
@@ -105,12 +131,14 @@ def crearProducto():
         error = 'Ya se registro este producto'
         return render_template('crearproducto.html', error=error)
 
+
 @app.route('/Eliminar/<id>', methods=['POST', 'GET'])
 def deleteProducto(id):
     producto = Producto.query.filter_by(id=id).first()
     db.session.delete(producto)
     db.session.commit()
     return redirect(url_for('productos', idu=1))
+
 
 @app.route('/EditarProducto/<id>', methods=['POST', 'GET'])
 def editProducto(id):
@@ -136,24 +164,99 @@ def perfil(idu):
     else:
         return render_template('perfil.html', usuario=usuario)
 
-@app.route('/Mercaya/<id><idu>')
-def reducirCantidad(id, idu):
-    producto = Producto.query.filter_by(id=id).first()
+
+# ese malparido carrito:
+
+@app.route('/agregarCarrito/<idu>', methods=['POST'])
+def agregarCarrito(idu):
+
+    try:
+        cantidadC = request.form['cantidadC']
+        cantidadC = int(cantidadC)
+        codigo = request.form['code']
+
+        if cantidadC and codigo and request.method == 'POST':
+            producto = Producto.query.filter_by(id=codigo).first()
+
+            itemArray = {producto.id: {'nombre': producto.nombre, 'codigo': producto.id, 'imagen': producto.imagen, 'precio': producto.precio, 'cantidad': cantidadC, 'descripcion': producto.descripcion, 'precioTotal': producto.precio * cantidadC}}
+
+            precioCarrito = 0
+            cantidadCarrito = 0
+
+            session.modified = True
+            if 'cart_item' in session:
+                if producto.id in session['cart_item']:
+                    for key, value in session['cart_item'].items():
+                        if key == producto.id:
+                            cantidadAntigua = session['cart_item'][key]['cantidad']
+                            cantidadTotal = cantidadAntigua + cantidadC
+                            session['cart_item'][key]['cantidad'] = cantidadTotal
+                            session['cart_item'][key]['precioTotal'] = cantidadTotal * producto.precio
+                else:
+                    session['cart_item'] = array_merge(session['cart_item'], itemArray)
+
+                for key, value in session['cart_item'].items():
+                    cantidadIndividual = int(session['cart_item'][key]['cantidad'])
+                    precioIndividual = float(session['cart_item'][key]['precioTotal'])
+                    cantidadCarrito = cantidadCarrito + cantidadIndividual
+                    precioCarrito = precioCarrito + precioIndividual
+
+            else:
+                session['cart_item'] = itemArray
+                cantidadCarrito = cantidadCarrito + cantidadC
+                precioCarrito = precioCarrito + (producto.precio * cantidadC)
+
+            session['cantidadCarrito'] = cantidadCarrito
+            session['precioCarrito'] = precioCarrito
+
+            
+            return redirect(url_for('productos', idu=idu))
+        else:
+            return render_template('admin.html', errorC='Error al agregar producto')
+
+    except ValueError as err:
+        pass 
+
+
+@app.route('/vaciar/<idu>')
+def vaciarCarrito(idu):
+    session.clear()
+    return redirect(url_for('carrito', idu=idu))
+
+
+@app.route('/Mercaya/Carrito/<idu>', methods=['POST', 'GET'])
+def carrito(idu):
     usuario = Usuario.query.filter_by(id=idu).first()
-    if producto.cantidad >= 1:
-        producto.cantidad = producto.cantidad - 1
-        db.session.commit()
-        time.sleep(3)
-        return redirect(url_for('productos', idu=usuario.id))
+    return render_template('carrito.html', usuario=usuario)
+
+
+@app.route('/quitar/<idu>/<string:code>')
+def quitarProducto(code, idu):
+    precioCarrito = 0
+    cantidadCarrito = 0
+    session.modified = True
+
+    for item in session['cart_item'].items():
+        if item[0] == code:
+            session['cart_item'].pop(item[0], None)
+            if 'cart_item' in session:
+                for key, value in session['cart_item'].items():
+                    cantidadIndividual = int(
+                        session['cart_item'][key]['cantidad'])
+                    precioIndividual = float(
+                        session['cart_item'][key]['precioTotal'])
+                    cantidadCarrito = cantidadCarrito + cantidadIndividual
+                    precioCarrito = precioCarrito + precioIndividual
+            break
+
+    if cantidadCarrito == 0:
+        session.clear()
     else:
-        pass
+        session['cantidadCarrito'] = cantidadCarrito
+        session['precioCarrito'] = precioCarrito
 
-@app.route('/Admin/Usuarios')
-def verUsuarios():
-    usuarios = Usuario.query.all()
-    return render_template('usuarios.html', usuarios=usuarios)
-
-
+    
+    return redirect(url_for('carrito', idu=idu))
 
 
 # Vea ni por el htpa vaya a borrar esto gvon

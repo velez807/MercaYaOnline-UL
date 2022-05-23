@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Cerrar Sesion</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('productos', idu=usuario.id) }}">Productos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Carrito</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('perfil', idu=usuario.id) }}">Perfil</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+
+    <div class="container">
+
+        <div class="row">
+
+            <h2 class="display-4 text-center mt-3 mb-3">Carrito de {{usuario.nombre}}</h2>
+            <div class="col-sm-12">
+
+                {% if 'cart_item' in session %}
+                <p><a id="btnEmpty" href="{{ url_for('vaciarCarrito', idu=usuario.id) }}" class="btn btn-danger">Vaciar
+                        Carrito</a></p>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th class="text-center">Precio unitario</th>
+                            <th class="text-center">Precio</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, val in session['cart_item'].items() %}
+                        {% set cantidad = session['cart_item'][key]['cantidad'] %}
+                        {% set precio = session['cart_item'][key]['precio'] %}
+                        {% set precioSubTotal = session['cart_item'][key]['precioTotal'] %}
+                        <tr>
+                            <td class="col-sm-8 col-md-6">
+                                <div class="media">
+                                    <a class="thumbnail pull-left"> <img class="media-object"
+                                            src="{{ session['cart_item'][key]['imagen'] }}"
+                                            style="width: 72px; height: 72px;"> </a>
+                                    <div class="media-body">
+                                        <h4 class="media-heading"> <a>{{ session['cart_item'][key]['nombre']}}</a></h4>
+                                        <span>{{ session['cart_item'][key]['descripcion']}}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="col-sm-1 col-md-1" style="text-align: center">
+                                <input type="number" class="form-control" value="{{ cantidad }}">
+                            </td>
+                            <td class="col-sm-1 col-md-1 text-center"><strong>${{ precio }} </strong></td>
+                            <td class="col-sm-1 col-md-1 text-center"><strong>${{ precioSubTotal }} </strong></td>
+                            <td class="col-sm-1 col-md-1">
+                                <a href="{{ url_for('quitarProducto', code=session['cart_item'][key]['codigo'], idu=usuario.id) }}"
+                                    class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-remove"></span> Quitar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="4">
+                                <h5>Total de productos</h5>
+                            </td>
+                            <td class="text-right">
+                                <h5><strong>{{ session['cantidadCarrito'] }}</strong></h5>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <h3>Total a pagar</h3>
+                            </td>
+                            <td colspan="2" class="text-right">
+                                <h3><strong>$ {{ session['precioCarrito'] }}</strong></h3>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <button type="button" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-shopping-cart"></span> Continuar con la compra
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-success">
+                                    Pagar <span class="glyphicon glyphicon-play"></span>
+                                </button>
+                            </td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+
+                {% else: %}
+                <div class="display-4 text-center mt-3 mb-3">Tu carrito está vacío</div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</body>
+
+</html>
