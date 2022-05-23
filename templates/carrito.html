@@ -54,6 +54,18 @@
             <h2 class="display-4 text-center mt-3 mb-3">Carrito de {{usuario.nombre}}</h2>
             <div class="col-sm-12">
 
+                <div>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <ul class=flashes>
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+
                 {% if 'cart_item' in session %}
                 <p><a id="btnEmpty" href="{{ url_for('vaciarCarrito', idu=usuario.id) }}" class="btn btn-danger">Vaciar
                         Carrito</a></p>

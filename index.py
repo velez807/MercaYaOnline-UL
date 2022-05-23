@@ -29,6 +29,7 @@ class Usuario(db.Model):
 class Producto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(80))
+    codigo = db.Column(db.String(255), unique=True)
     imagen = db.Column(db.String(300))
     precio = db.Column(db.String(80))
     categoria = db.Column(db.String(80))
@@ -121,9 +122,9 @@ def aggproductos():
 
 @app.route('/Crear', methods=['POST', 'GET'])
 def crearProducto():
-    nuevoProducto = Producto(nombre=request.form['nombre'], imagen=request.form['imagen'], precio=request.form['precio'],
+    nuevoProducto = Producto(nombre=request.form['nombre'], imagen=request.form['imagen'], precio=request.form['precio'], codigo=request.form['codigo'],
                              categoria=request.form['categoria'], cantidad=request.form['cantidad'], descripcion=request.form['descripcion'])
-    if Producto.query.filter_by(nombre=request.form['nombre']).first() is None:
+    if Producto.query.filter_by(nombre=request.form['nombre']).first() is None and Producto.query.filter_by(codigo=request.form['codigo']).first() is None:
         db.session.add(nuevoProducto)
         db.session.commit()
         return redirect(url_for('productos', idu=1))
@@ -145,6 +146,7 @@ def editProducto(id):
     producto = Producto.query.filter_by(id=id).first()
     if request.method == 'POST':
         producto.nombre = request.form['nombre']
+        producto.codigo = request.form['codigo']
         producto.imagen = request.form['imagen']
         producto.precio = request.form['precio']
         producto.categoria = request.form['categoria']
@@ -171,23 +173,22 @@ def perfil(idu):
 def agregarCarrito(idu):
 
     try:
-        cantidadC = request.form['cantidadC']
-        cantidadC = int(cantidadC)
-        codigo = request.form['code']
+        cantidadC = int(request.form['cantidadC'])
+        _codigo = request.form['code']
 
-        if cantidadC and codigo and request.method == 'POST':
-            producto = Producto.query.filter_by(id=codigo).first()
+        if cantidadC and _codigo and request.method == 'POST':
+            producto = Producto.query.filter_by(codigo=_codigo).first()
 
-            itemArray = {producto.id: {'nombre': producto.nombre, 'codigo': producto.id, 'imagen': producto.imagen, 'precio': producto.precio, 'cantidad': cantidadC, 'descripcion': producto.descripcion, 'precioTotal': producto.precio * cantidadC}}
+            itemArray = {producto.codigo: {'nombre': producto.nombre, 'codigo': producto.codigo, 'imagen': producto.imagen, 'precio': producto.precio, 'cantidad': cantidadC, 'descripcion': producto.descripcion, 'precioTotal': producto.precio * cantidadC}}
 
             precioCarrito = 0
             cantidadCarrito = 0
 
             session.modified = True
             if 'cart_item' in session:
-                if producto.id in session['cart_item']:
+                if producto.codigo in session['cart_item']:
                     for key, value in session['cart_item'].items():
-                        if key == producto.id:
+                        if key == producto.codigo:
                             cantidadAntigua = session['cart_item'][key]['cantidad']
                             cantidadTotal = cantidadAntigua + cantidadC
                             session['cart_item'][key]['cantidad'] = cantidadTotal

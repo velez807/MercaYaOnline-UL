@@ -104,7 +104,7 @@
                         {% if usuario.nombre != 'admin' %}
                         {% if producto.cantidad > 0 %}
                         <form method="post" action="/agregarCarrito/{{ usuario.id }}">
-                            <input type="hidden" name="code" value="{{ producto.id }}">
+                            <input type="hidden" name="code" value="{{ producto.codigo }}">
                             <input type="number" min="1" max="{{producto.cantidad}}" name="cantidadC" value="1"
                                 style="width: 50px;">
                             <input type="submit" onclick="Swal.fire('El producto se ha agregado al carrito')"
