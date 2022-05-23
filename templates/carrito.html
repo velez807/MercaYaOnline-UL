@@ -54,20 +54,18 @@
             <h2 class="display-4 text-center mt-3 mb-3">Carrito de {{usuario.nombre}}</h2>
             <div class="col-sm-12">
 
-                <div>
-                    {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                    <ul class=flashes>
-                        {% for message in messages %}
-                        <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                    {% endwith %}
-                </div>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <ul class=flashes>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% endwith %}
 
                 {% if 'cart_item' in session %}
-                <p><a id="btnEmpty" href="{{ url_for('vaciarCarrito', idu=usuario.id) }}" class="btn btn-danger">Vaciar
+                <p><a id="btnEmpty" href="{{ url_for('.vaciarCarrito', idu=usuario.id) }}" class="btn btn-danger">Vaciar
                         Carrito</a></p>
                 <table class="table table-hover">
                     <thead>
@@ -96,13 +94,11 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="col-sm-1 col-md-1" style="text-align: center">
-                                <input type="number" class="form-control" value="{{ cantidad }}">
-                            </td>
+                            <td class="col-sm-1 col-md-1 text-center"><strong>{{ cantidad }} </strong></td>
                             <td class="col-sm-1 col-md-1 text-center"><strong>${{ precio }} </strong></td>
                             <td class="col-sm-1 col-md-1 text-center"><strong>${{ precioSubTotal }} </strong></td>
                             <td class="col-sm-1 col-md-1">
-                                <a href="{{ url_for('quitarProducto', code=session['cart_item'][key]['codigo'], idu=usuario.id) }}"
+                                <a href="{{ url_for('.quitarProducto', code=session['cart_item'][key]['codigo'], idu=usuario.id) }}"
                                     class="btn btn-danger">
                                     <span class="glyphicon glyphicon-remove"></span> Quitar
                                 </a>
