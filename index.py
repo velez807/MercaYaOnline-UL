@@ -1,7 +1,7 @@
 from array import array
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
-import time
+import random, time
 
 # Servidor:
 app = Flask(__name__)
@@ -210,7 +210,8 @@ def agregarCarrito(idu):
             session['cantidadCarrito'] = cantidadCarrito
             session['precioCarrito'] = precioCarrito
 
-            
+            producto.cantidad = producto.cantidad - cantidadC
+            db.session.commit()
             return redirect(url_for('productos', idu=idu))
         else:
             return render_template('admin.html', errorC='Error al agregar producto')
@@ -237,6 +238,9 @@ def quitarProducto(code, idu):
     cantidadCarrito = 0
     session.modified = True
 
+    cantidad = session['cart_item'][code]['cantidad']
+    producto = Producto.query.filter_by(codigo=code).first()
+
     for item in session['cart_item'].items():
         if item[0] == code:
             session['cart_item'].pop(item[0], None)
@@ -249,15 +253,49 @@ def quitarProducto(code, idu):
                     cantidadCarrito = cantidadCarrito + cantidadIndividual
                     precioCarrito = precioCarrito + precioIndividual
             break
-
+    
     if cantidadCarrito == 0:
         session.clear()
+        
     else:
         session['cantidadCarrito'] = cantidadCarrito
         session['precioCarrito'] = precioCarrito
 
-    
+    producto.cantidad = producto.cantidad + cantidad
+    db.session.commit()
     return redirect(url_for('carrito', idu=idu))
+
+@app.route('/comprar/<idu>', methods=['POST', 'GET'])
+def comprar(idu):
+    usuario = Usuario.query.filter_by(id=idu).first()
+    numero = random.randint(10000, 99999)
+    tarjeta = str(usuario.tarjeta)
+    codigo = str(usuario.codigo)
+    time.sleep(3)
+    if len(tarjeta) == 16 and len(codigo) == 3:
+        return render_template('factura.html', usuario=usuario, numero=numero)
+    else:
+        return render_template('carrito.html', usuario=usuario, errorP='Tu método de pago ha sido rechazado')
+
+
+@app.route('/Mercaya/Perfil/MétodoPago/<idu>', methods=['POST', 'GET'])
+def metodoPago(idu):
+    usuario = Usuario.query.filter_by(id=idu).first()
+    if request.method == 'POST':
+        tarjeta = request.form['tarjeta']
+        codigo = request.form['codigo']
+        fecha = request.form['fecha']
+        if len(tarjeta) == 16 and len(codigo) == 3:
+            usuario.tarjeta = tarjeta
+            usuario.codigo = codigo
+            usuario.fecha = fecha
+            db.session.commit()
+            return render_template('perfil.html', usuario=usuario, mensaje='Tu método de pago ha sido actualizado')
+        else:
+            return render_template('metodopago.html', usuario=usuario, error='Tarjeta o código inválidos')
+    else:
+        return render_template('metodopago.html', usuario=usuario)
+
 
 
 # Vea ni por el htpa vaya a borrar esto gvon

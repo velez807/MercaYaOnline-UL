@@ -10,6 +10,7 @@
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -65,8 +66,7 @@
                 {% endwith %}
 
                 {% if 'cart_item' in session %}
-                <p><a id="btnEmpty" href="{{ url_for('.vaciarCarrito', idu=usuario.id) }}" class="btn btn-danger">Vaciar
-                        Carrito</a></p>
+
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -98,10 +98,9 @@
                             <td class="col-sm-1 col-md-1 text-center"><strong>${{ precio }} </strong></td>
                             <td class="col-sm-1 col-md-1 text-center"><strong>${{ precioSubTotal }} </strong></td>
                             <td class="col-sm-1 col-md-1">
-                                <a href="{{ url_for('.quitarProducto', code=session['cart_item'][key]['codigo'], idu=usuario.id) }}"
-                                    class="btn btn-danger">
-                                    <span class="glyphicon glyphicon-remove"></span> Quitar
-                                </a>
+                                <form action="/quitar/{{ usuario.id }}/{{ session['cart_item'][key]['codigo'] }}">
+                                    <input type="submit" class="btn btn-danger" value="Quitar">
+                                </form>
                             </td>
                         </tr>
                         {% endfor %}
@@ -122,15 +121,20 @@
                             </td>
                         </tr>
                         <tr>
+                            {% if errorP %}
+                            <div class="alert alert-danger">
+                                {{ errorP }}. Por favor: <a class="nav-link" href="{{ url_for('metodoPago', idu=usuario.id) }}">Actualice su método de pago</a>
+                            </div>
+                            {% endif %}
                             <td colspan="4">
                                 <button type="button" class="btn btn-default">
                                     <span class="glyphicon glyphicon-shopping-cart"></span> Continuar con la compra
                                 </button>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-success">
-                                    Pagar <span class="glyphicon glyphicon-play"></span>
-                                </button>
+                                <form action="/comprar/{{ usuario.id }}">
+                                    <input type="submit" class="btn btn-success" value="Comprar" onclick="Swal.fire('Espera un momento')">
+                                </form>
                             </td>
                         </tr>
 
