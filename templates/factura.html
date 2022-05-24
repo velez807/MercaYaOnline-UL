@@ -45,19 +45,24 @@
 </head>
 
 <body>
-    
+
 
     <div class="container">
 
         <div id="imp1" class="col-sm-5" style="margin: 0 auto;">
             <h1 class="display-4 text-center mt-3 mb-3">Factura de compra</h1>
             <hr>
+            <p style="float: left;">MercaYa Online</p>
+            <p style="float: right;">Factura No: F0{{ numero }}</p>
+            <p style="text-align: center;">
+                <script>DameLaFechaHora();</script>
+            </p> <br>
+            <p style="float: left;">Cliente: {{ usuario.nombre }}</p> <br>
+            <p style="float: right;">Cédula: {{ usuario.cedula }}</p> <br>
+            <p>Dirección: {{ usuario.direccion }}</p> <br>
+            <hr>
             <table class="table">
-                <p style="float: left;">MercaYa Online</p>
-                <p style="float: right;">Factura No: F0{{ numero }}</p>
-                <p style="text-align: center;">
-                    <script>DameLaFechaHora();</script>
-                </p>
+
                 <thead>
                     <tr>
                         <th>Producto</th>
@@ -95,20 +100,20 @@
                             <h3><strong>$ {{ session['precioCarrito'] }}</strong></h3>
                         </td>
                     </tr>
-                    <tr>
+
                 </tbody>
-                <p style="float: left;">Cliente: {{ usuario.nombre }}</p>
-                <p style="float: right;">Cédula: {{ usuario.cedula }}</p>
+
             </table>
             <hr>
 
         </div>
 
         <center>
-        <form action="/vaciar/{{ usuario.id }}">
-            <button type="submit" class="btn btn-primary" onclick="javascript:imprim1(imp1);">Imprimir</button>
-            <input type="submit" class="btn btn-danger" value="Cerrar">
-        </form></center>
+            <form action="/vaciar/{{ usuario.id }}">
+                <button type="submit" class="btn btn-primary" onclick="javascript:imprim1(imp1);">Imprimir</button>
+                <input type="submit" class="btn btn-danger" value="Cerrar">
+            </form>
+        </center>
     </div>
 
 
