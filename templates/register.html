@@ -55,7 +55,11 @@
                     placeholder="Número telefonico" required>
 
             </div>
-
+            {% if errorc %}
+            <div class="alert alert-danger" role="alert">
+                {{ errorc }}
+              </div>
+            {% endif %}
             <div class="input-contenedor">
                 <i class="fas fa-key icon"></i>
                 <input type="password" name="contrasena" class="contraseña"
@@ -65,7 +69,7 @@
 
             <div class="input-contenedor">
                 <i class="fas fa-key icon"></i>
-                <input type="password" class="rcontraseña"
+                <input type="password" class="rcontraseña" name="rcontrasena"
                     placeholder="Repetir Contraseña" required>
             </div>
         </div>

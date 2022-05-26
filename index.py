@@ -67,12 +67,16 @@ def register():
 def crearUsuario():
     nuevoUsuario = Usuario(nombre=request.form['nombre'], cedula=request.form['cedula'], correo=request.form['correo'], contrasena=request.form['contrasena'],
                            tarjeta=request.form['tarjeta'], codigo=request.form['codigo'], fecha=request.form['fecha'], direccion=request.form['direccion'], telefono=request.form['telefono'])
+    rcontrasena=request.form['rcontrasena']
     if nuevoUsuario.nombre == 'admin':
         return render_template('register.html', admin='Nombre de usuario incorrecto')
     if Usuario.query.filter_by(cedula=request.form['cedula']).first() is None:
-        db.session.add(nuevoUsuario)
-        db.session.commit()
-        return render_template('Regis.html')
+        if nuevoUsuario.contrasena == rcontrasena:
+            db.session.add(nuevoUsuario)
+            db.session.commit()
+            return render_template('Regis.html')
+        else:
+            return render_template('register.html', errorc='Contraseñas no coinciden')
     else:
         return render_template('register.html', error='Ya hay un usuario registrado con esta cédula')
 
